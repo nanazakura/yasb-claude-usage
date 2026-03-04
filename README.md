@@ -12,7 +12,13 @@ Displays real-time Claude Code session usage (5-hour, 7-day, Sonnet) on your YAS
 
 ## Setup
 
-### 1. YASB Config (`config.yaml`)
+### 1. Clone
+
+```bash
+git clone https://github.com/nanazakura/yasb-claude-usage.git
+```
+
+### 2. YASB Config (`config.yaml`)
 
 Add a CustomWidget to your YASB bar configuration:
 
@@ -24,16 +30,16 @@ widgets:
       label: "\uf4fc {data[text]}"
       label_alt: "\uf4fc 5h:{data[five_pct]}% 7d:{data[seven_pct]}%"
       label_max_length: 32
+      class_name: "claude-usage-widget"
+      tooltip: true
+      tooltip_label: "{data[tooltip]}"
       exec_options:
-        run_cmd: "python C:/Users/Azumi/Documents/Repos/yasb-claude-usage/claude_usage.py"
+        run_cmd: "python /path/to/yasb-claude-usage/claude_usage.py"
         run_interval: 120000  # 2 minutes (ms)
         return_format: "json"
       callbacks:
         on_left: "toggle_label"
         on_right: "exec"
-        on_right_exec_options:
-          run_cmd: "python C:/Users/Azumi/Documents/Repos/yasb-claude-usage/claude_usage.py --force"
-          return_format: "json"
 ```
 
 Then add `claude_usage` to one of your bar rows:
@@ -47,24 +53,14 @@ bars:
       right: ["claude_usage", ...]
 ```
 
-### 2. YASB Styles (`styles.css`)
+### 3. YASB Styles (`styles.css`)
 
 ```css
-.claude_usage-widget {
+.claude-usage-widget {
   padding: 0 8px;
 }
-.claude_usage-widget .widget-content .label {
+.claude-usage-widget .widget-content .label {
   font-size: 13px;
-}
-/* Color by status class */
-.claude_usage-widget.status-low .label {
-  color: #76946a;
-}
-.claude_usage-widget.status-medium .label {
-  color: #e6c384;
-}
-.claude_usage-widget.status-high .label {
-  color: #e82424;
 }
 ```
 
