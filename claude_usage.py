@@ -117,11 +117,15 @@ def main():
         "7-day rolling",
         f"  {progress_bar(seven_pct)} {seven_pct}%",
         f"  Resets in {seven_reset}",
-        "",
-        "7-day Sonnet",
-        f"  {progress_bar(sonnet_pct)} {sonnet_pct}%",
-        f"  Resets in {sonnet_reset}",
     ]
+
+    if data.get("seven_day_sonnet"):
+        lines += [
+            "",
+            "7-day Sonnet",
+            f"  {progress_bar(sonnet_pct)} {sonnet_pct}%",
+            f"  Resets in {sonnet_reset}",
+        ]
 
     if extra.get("is_enabled"):
         used = extra.get("used_credits", 0) / 100
