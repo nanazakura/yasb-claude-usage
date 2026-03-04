@@ -1,5 +1,7 @@
 # yasb-claude-usage
 
+**[日本語](README.ja.md)**
+
 Claude Code API usage widget for [YASB (Yet Another Status Bar)](https://github.com/amnweb/yasb).
 
 Displays real-time Claude Code session usage (5-hour, 7-day, Sonnet) on your YASB bar via the CustomWidget mechanism.
