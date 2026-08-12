@@ -61,7 +61,7 @@ YASB の設定ファイル `config.yaml` を開きます。場所は通常 `%USE
     type: "yasb.custom.CustomWidget"
     options:
       label: "\uf4fc {data[text]}"
-      label_alt: "\uf4fc 5h:{data[five_pct]}% 7d:{data[seven_pct]}%"
+      label_alt: "\uf4fc 5h:{data[five_pct]}% 7d:{data[seven_pct]}% F:{data[fable_pct]}%"
       label_max_length: 32
       class_name: "claude-usage-widget"
       tooltip: true
@@ -123,13 +123,14 @@ bars:
 |------|------|
 | 5-hour session | 直近5時間の使用率。これが 80% を超えると制限が近い |
 | 7-day rolling | 7日間の累積使用率 |
-| 7-day Sonnet | 7日間の Sonnet モデル使用率 |
+| 7-day Fable など | モデル別の7日間使用率（API が返す場合のみ自動表示） |
 | Extra credits | 追加クレジット（有効な場合のみ表示） |
 
 ## うまく動かないとき
 
 - **バーに何も表示されない**: `run_cmd` のパスが間違っている可能性が高いです。ステップ 2 の動作確認をやり直してみてください
-- **`??` と表示される**: API へのアクセスに失敗しています。ネットワーク接続と Claude Code のログイン状態を確認してください
+- **`??` と表示される**: API へのアクセスに失敗していて、かつキャッシュも無い状態です。ネットワーク接続と Claude Code のログイン状態を確認してください
+- **ツールチップに `(!) token expired` と出る**: 認証トークンの期限切れです（約8時間で切れます）。Claude Code を一度起動すれば自動で更新されます。それまでは最後に取得したデータを表示し続けます
 - **数値が更新されない**: 2分間のキャッシュがあります。右クリックで即時更新できます
 
 ## キャッシュについて

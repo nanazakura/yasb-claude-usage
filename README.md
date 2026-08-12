@@ -4,7 +4,7 @@
 
 Claude Code API usage widget for [YASB (Yet Another Status Bar)](https://github.com/amnweb/yasb).
 
-Displays real-time Claude Code session usage (5-hour, 7-day, Sonnet) on your YASB bar via the CustomWidget mechanism.
+Displays real-time Claude Code session usage (5-hour, 7-day, and per-model weekly limits such as Fable) on your YASB bar via the CustomWidget mechanism.
 
 ## Requirements
 
@@ -30,7 +30,7 @@ widgets:
     type: "yasb.custom.CustomWidget"
     options:
       label: "\uf4fc {data[text]}"
-      label_alt: "\uf4fc 5h:{data[five_pct]}% 7d:{data[seven_pct]}%"
+      label_alt: "\uf4fc 5h:{data[five_pct]}% 7d:{data[seven_pct]}% F:{data[fable_pct]}%"
       label_max_length: 32
       class_name: "claude-usage-widget"
       tooltip: true
@@ -75,12 +75,16 @@ The script outputs a JSON object with these fields:
 | `text` | `"42%"` | 5-hour usage percentage (primary display) |
 | `five_pct` | `42` | 5-hour session utilization % |
 | `seven_pct` | `15` | 7-day rolling utilization % |
-| `sonnet_pct` | `8` | 7-day Sonnet utilization % |
+| `fable_pct` | `4` | 7-day Fable utilization % (0 if not present) |
+| `sonnet_pct` | `8` | 7-day Sonnet utilization % (0 if not present) |
 | `five_reset` | `"2h30m"` | Time until 5-hour reset |
 | `seven_reset` | `"3d12h"` | Time until 7-day reset |
+| `fable_reset` | `"2d07h"` | Time until Fable reset |
 | `sonnet_reset` | `"5d08h"` | Time until Sonnet reset |
 | `status` | `"low"` | `low` (<50%), `medium` (50-79%), `high` (>=80%) |
 | `tooltip` | `"Claude Code Usage\n..."` | Multi-line plain-text tooltip with progress bars |
+
+The script reads both API schemas: the current `limits` array (session / weekly / per-model scoped limits) and the legacy `five_hour` / `seven_day` / `seven_day_sonnet` fields. Per-model weekly limits (e.g. Fable) are listed automatically in the tooltip.
 
 ## Usage
 
@@ -92,6 +96,10 @@ python claude_usage.py
 python claude_usage.py --force
 ```
 
-## Cache
+## Cache & Error Handling
 
 Usage data is cached at `%TEMP%\claude_usage_cache.json` for 2 minutes to avoid excessive API calls. Right-click the widget (with the config above) to force a refresh.
+
+If the API call fails (network error, expired token), the widget keeps showing the last cached data and appends a `(!)` note to the tooltip instead of going blank. `??` only appears when there is no cache at all.
+
+Note on the OAuth token: the widget reads the access token from `~/.claude/.credentials.json` but never refreshes it. Claude Code refreshes the token (roughly every 8 hours) whenever it runs — if you haven't used Claude Code for a while, the widget shows stale data with a `token expired - open Claude Code` note until you run Claude Code again.
